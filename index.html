@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Курсовая</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="icons/pitcher.png" type="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <h1 class="header-title">Разработка скрипта «Головоломка с кувшинами для воды»</h1>
+    </header>
+    <div class="conditions-section">
+        <h2 class="codition-title"> Условие задачи </h2>
+        <p class="condition">Для набора из 3 кувшинов с водой емкостью A, B и C литров найдите минимальное
+            количество операций, выполняемых перед тем, как каждый кувшин наберет x, y и z литров. Только кувшин С может
+            полностью заполняться. Операция может быть любой из следующих: кувшин опорожняется, кувшин наполняется, или
+            вода
+            переливается из одного кувшина в другой, пока один из кувшинов не станет
+            пустым или полным. Например, кувшины A, B и C вместимостью 3, 5 и 8 литров,
+            где кувшины A и B вначале пусты, а C имеет полных 8 литров, требуют 2
+            операций для достижения состояния 0, 3 и 5 литров в кувшины. Создайте
+            функцию, которая, учитывая массив емкостей кувшина [A, B, C] и массив
+            состояний цели [x, y, z], возвращает минимальное количество операций,
+            необходимых для достижения состояния цели. Если введенные данные
+            недействительны или решения нет, верните «Нет решения». Количество воды в
+            кувшине никогда не может превышать вместимость этого кувшина. Общее
+            количество литров в целевом состоянии должно быть равно вместимости кувшина C.
+        </p>
+    </div>
+    <div class="solving">
+        <h2> Решение головолмки </h2>
+        <form id="form">
+            <div>
+
+                <p class='data_entry'>Введите максимальные объемы кувшинов</p>
+
+                <div class="input_volumes">
+
+                    A:<input class="entering_volume" type="number" name="max_a" min="0" value="3" step="1"
+                        placeholder="введите число" required>
+
+                    B:<input class="entering_volume" type="number" name="max_b" min="0" value="5" step="1"
+                        placeholder="введите число" required>
+
+                    C:<input class="entering_volume" type="number" name="max_c" min="0" value="8" step="1"
+                        placeholder="введите число" required>
+                </div>
+
+                <p class='data_entry'>Введите целевые объемы кувшинов</p>
+
+                <div class="input_volumes">
+
+                    A:<input class="entering_volume" type="number" name="goal_a" min="0" value="0" step="any"
+                        placeholder="введите число" required>
+
+                    B:<input class="entering_volume" type="number" name="goal_b" min="0" value="3" step="any"
+                        placeholder="введите число" required>
+
+                    C:<input class="entering_volume" type="number" name="goal_c" min="0" value="5" step="any"
+                        placeholder="введите число" required>
+
+                </div>
+
+            </div>
+            <button class="button" type="submit">Рассчитать</button>
+        </form>
+    </div>
+
+    <script src="js/script.js"></script>
+    <footer>
+        <h2>
+            <a href="https://vk.com/id141338946" style="text-decoration:none;color:black">Выполнил: Семенов Олег
+                8К91</a>
+        </h2>
+    </footer>
+</body>
+
+</html>
