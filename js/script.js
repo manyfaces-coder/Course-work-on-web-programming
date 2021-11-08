@@ -40,7 +40,6 @@ function main(all_volumes, goal_volumes) {
 
     //Создание изначального наполнения кувшинов
     initial_comb = create_initial_filling(all_volumes, dict, unique_combinations, combinations_to_calculate)
-
     //Расчет всех комбинаций 
     do {
         t = calc_new_combs(all_volumes, combinations_to_calculate, dict, Combination_key, unique_combinations, arr_transfusions)
@@ -50,9 +49,6 @@ function main(all_volumes, goal_volumes) {
 
     } while (combinations_to_calculate.length != 0)
 
-
-    console.log('Уникальные комбинации')
-    console.log(unique_combinations)
     display_all_combinations(arr_transfusions, all_results, initial_comb)
     res = search_results(all_results, goal_volumes)
 
@@ -73,19 +69,17 @@ function display_all_combinations(arr_transfusions, all_results, comb) {
                 }
             }
         }
-        dispaly.unshift(comb.join(''))
+        dispaly.unshift(comb.join(' '))
         all_results.unshift(dispaly)
         c -= 1
     } while (c != 0)
-
-    // console.log(all_results)
     for (let i = 0; i < all_results.length; i++) {
         console.log(all_results[i].join(' --> '))
     }
 }
 
 function search_results(all_results, goal_volumes) {
-    let goal = goal_volumes.join('')
+    let goal = goal_volumes.join(' ')
     let res = 0
     let cons = ''
     let full_comb = ''
@@ -95,13 +89,11 @@ function search_results(all_results, goal_volumes) {
                 res = 1
                 cons = all_results[i].length - 1
                 console.log('Количество операций для достижения цели: ' + cons)
-                // console.log(all_results[i].length-1)
                 if (cons != 0) {
                     full_comb = all_results[i].join(' --> ')
                     return "Минимальное количество операций: " + cons + "<br>" + "Комбинация: " + full_comb
                 }
                 return "Нет решения"
-                // console.log(all_results[i].join(' --> '))   
             }
         }
     }
@@ -113,7 +105,7 @@ function search_results(all_results, goal_volumes) {
 
 function get_comb(dict, counter, combinations_to_calculate) {
     for (let i = 0; i < dict[counter].length; i++) {
-        comb = (dict[counter][i]).replace(/\s/g, '')
+        comb = (dict[counter][i])
         combinations_to_calculate.unshift(comb)
     }
 }
@@ -126,20 +118,19 @@ function create_initial_filling(volumes, dict, unique_combinations, combinations
     arr.push(volumes[volumes.length - 1])
 
     dict['0'] = arr.join(' ')
-    unique_combinations.add(arr.join(''))
-    combinations_to_calculate.push(arr.join(''))
+    unique_combinations.add(arr.join(' '))
+    combinations_to_calculate.push(arr)
 
     return arr
 }
 
-function calc_new_combs(all_volumes, combinations_to_calculate, dict, Combination_key, confirmed_combinations, arr_transfusions) {
+function calc_new_combs(all_volumes, combinations_to_calculate, dict, Combination_key, unique_combinations, arr_transfusions) {
     let calc = combinations_to_calculate.pop() //литраж кувшинов перед переливанием
-    let comb = calc.split('');
     let new_combs_arr = [] //новая комбинация
     let arr = [] //массив для добавления комбинаций в словарь
     let transfusion = [] //массив для хранения возможных комбинаций переливаний
     let show_transition = 0 //переменная для показа переливания
-    transfusion.push(calc) //
+    transfusion.push(calc.join(' ')) //
     Combination_key += 1
     dict[Combination_key] = arr
 
@@ -148,21 +139,20 @@ function calc_new_combs(all_volumes, combinations_to_calculate, dict, Combinatio
         for (let j = 0; j < all_volumes.length; j++) {
 
             if (i != j) {
-                possible = possible_pour(Number(comb[i]), Number(comb[j]), all_volumes[j])
+                possible = possible_pour(Number(calc[i]), Number(calc[j]), all_volumes[j])
 
                 if (possible == true) {
 
-                    res_pour = pour_water(Number(comb[i]), Number(comb[j]), all_volumes[j])
+                    res_pour = pour_water(Number(calc[i]), Number(calc[j]), all_volumes[j])
                     //если при переливании получилась новая комбинация добавляем ее в список
-                    new_comb = add_new_comb(comb, dict, new_combs_arr, res_pour, i, j, Combination_key, confirmed_combinations)
-
+                    new_comb = add_new_comb(calc, dict, new_combs_arr, res_pour, i, j, Combination_key, unique_combinations)
                     if (new_comb != false) {
                         show_transition = '--> ' + new_comb
                     }
                     new_comb = false
                 }
                 if (show_transition != 0) {
-                    transfusion.push(show_transition)
+                    transfusion.push(show_transition.replace(/,/g , " "))
                     show_transition = 0
                 }
             }
@@ -189,7 +179,7 @@ function pour_water(from_, in_, max_vol) {
     return [from_, in_]
 }
 
-function add_new_comb(comb, dict, new_combs_arr, res_pour, i, j, Combination_key, confirmed_combinations) {
+function add_new_comb(comb, dict, new_combs_arr, res_pour, i, j, Combination_key, unique_combinations) {
     let new_comb = "";
     //ПОСЛЕ РАССЧЕТА
     for (let k = 0; k < comb.length; k++) {
@@ -201,18 +191,19 @@ function add_new_comb(comb, dict, new_combs_arr, res_pour, i, j, Combination_key
             new_comb += " " + comb[k];
         }
     }
-
-    if (lets_to_check(new_comb.replace(/\s/g, ''), confirmed_combinations) == true) {
+    
+    new_comb = (new_comb.trimStart()).split(' ')
+    if (lets_to_check(new_comb.join(' '), unique_combinations) == true) {
         new_combs_arr.push(new_comb)
         dict[Combination_key] = new_combs_arr
-        return new_comb.replace(/\s/g, '')
+        return new_comb
     }
     return false
 }
 
-function lets_to_check(newCombination, confirmed_combinations) {
-    if (confirmed_combinations.has(newCombination) != true) {
-        confirmed_combinations.add(newCombination)
+function lets_to_check(newCombination, unique_combinations) {
+    if (unique_combinations.has(newCombination) != true) {
+        unique_combinations.add(newCombination)
         return true
     }
     return false
