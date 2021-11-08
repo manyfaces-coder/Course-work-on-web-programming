@@ -15,6 +15,9 @@ h2 {
     text-decoration: underline;
 }
 
+#form {
+    padding: 0px 200px 0px 200px;
+}
 
 .entering_volume{
     margin: 20px 20px;
