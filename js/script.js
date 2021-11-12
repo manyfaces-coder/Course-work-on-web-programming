@@ -1,6 +1,6 @@
 
 
-const form = document.getElementById('form');
+const form = document.getElementById('puzzel');
 form.addEventListener('submit', get_solution);
 
 let max_a = form.querySelector('[name="max_a"]')
@@ -33,7 +33,7 @@ function main(all_volumes, goal_volumes) {
     let dict = new Object()
     let unique_combinations = new Set()     // множество уникальных комбинаций для проверки
     let combinations_to_calculate = []      // комбинации на проверку и для расчета новых
-    let all_results = new Array();          //Список для вывода всех комбинаций 
+    let all_results = []                    //Список для вывода всех комбинаций 
     let initial_comb = 0                    //Переменная для хранения изначального состояния кувшинов
     let arr_transfusions = []               //Список для хранения переливаний
     let combination_key = 0
@@ -49,9 +49,8 @@ function main(all_volumes, goal_volumes) {
     } while (combinations_to_calculate.length != 0)
 
     display_all_combinations(arr_transfusions, all_results, initial_comb)
-    res = search_results(all_results, goal_volumes)
-    return res
 
+    return search_results(all_results, goal_volumes)
 }
 
 //функция для вывода всех возможны комбинаций в консоль
@@ -80,16 +79,16 @@ function display_all_combinations(arr_transfusions, all_results, comb) {
 function search_results(all_results, goal_volumes) {
     let goal = goal_volumes.join(' ')
     let res = 0
-    let cons = ''
+    let min_num_operations = ''
     let full_comb = ''
     for (let i = 0; i < all_results.length; i++) {
         for (let j = 0; j < all_results[i].length; j++) {
             if (all_results[i][j] == goal) {
                 res = 1
-                cons = all_results[i].length - 1
-                if (cons != 0) {
+                min_num_operations = all_results[i].length - 1
+                if (min_num_operations != 0) {
                     full_comb = all_results[i].join(' --> ')
-                    return "Минимальное количество операций: " + cons + "<br>" + "Комбинация: " + full_comb
+                    return "Минимальное количество операций: " + min_num_operations + "<br>" + "Комбинация: " + full_comb
                 }
                 return "Нет решения"
             }
@@ -127,7 +126,7 @@ function calc_new_combs(all_volumes, combinations_to_calculate, dict, combinatio
     let arr = [] //массив для добавления комбинаций в словарь
     let transfusion = [] //массив для хранения возможных комбинаций переливаний
     let show_transition = 0 //переменная для показа переливания
-    transfusion.push(calc.join(' ')) //
+    transfusion.push(calc.join(' '))
     combination_key += 1
     dict[combination_key] = arr
 
@@ -153,10 +152,8 @@ function calc_new_combs(all_volumes, combinations_to_calculate, dict, combinatio
                     show_transition = 0
                 }
             }
-
         }
     }
-
     arr_transfusions.push(transfusion)
     return combination_key
 }
@@ -171,8 +168,8 @@ function pour_water(from_, in_, max_vol) {
     //согласно условииям
     let liters_transfusion = Math.min(max_vol - in_, from_)//если колич. литров до максимального наполнения кувшина №1 меньше чем колич.
     //литров в кувшине №2, выбираем колич. литров до макс. наполнения и наоборот
-    from_ -= liters_transfusion
-    in_ += liters_transfusion
+    from_ -= liters_transfusion //вычитаем получившиеся литры из кувшина №2
+    in_ += liters_transfusion   //добавляем литры в кувшин №1  
     return [from_, in_]
 }
 
@@ -205,4 +202,3 @@ function checking_new_combination(new_combination, unique_combinations) {
     }
     return false
 }
-
